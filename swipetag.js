@@ -17,6 +17,4 @@ var dots = window.setInterval( function() {
 	}, 200);
 
 var rmn = document.getElementById("replaceMachineName");
-var machineName = window.location.search.split("=")[1];
-console.log(machineName);
-rmn.innerHTML = decodeURI(machineName);
+rmn.innerHTML = decodeURI(window.location.search.split("=")[1]);

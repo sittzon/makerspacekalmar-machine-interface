@@ -8,11 +8,16 @@ block content
     div(class="row")
       div(id="machinesDiv")
       - for(var i = 0; i < machineNames.length; i++)
-          div(class="col-sm-3")
+        div(class="col-sm-3")
+        if pinsTimeLeft[i] <= 0
           button(type="button"
-          class="btn btn-primary btn-lg btn-block"
-          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"';")=machineNames[i]
-          p
+          class="btn btn-default btn-lg btn-block"
+          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"&pinNr="+i+"';")=machineNames[i]
+        else
+          button(type="button"
+          class="btn btn-success btn-lg btn-block"
+          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"&pinNr="+i+"';")=(machineNames[i]+': '+pinsTimeLeft[i]+'s kvar')
+        p
 
   script
     include ../root.js
