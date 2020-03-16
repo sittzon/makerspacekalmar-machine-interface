@@ -10,17 +10,48 @@ var rpioptions = {
 
 rpio.init(rpioptions);
 
-// Root view, choose machine
-router.get('/', (req, res) => {
-  console.log(req);
-  rpio.open(15, rpio.INPUT);
-  console.log('Pin 15 is currently ' + (rpio.read(15) ? 'high' : 'low'));
-  res.render('root', {title: 'Kalmar Makerspace Maskin Interface'}); //Renders the interface.pug-file
-});
+var machineNames = ['Svarv', 'Bandsåg', 'Bordsåg', 'CNC-fräs']
+var pinsPhysical = [15,16,18,19];
+var pinsPhysicalStatus = [0,0,0,0];
+var pinsTimeLeft = [0,0,0,0];
+
+//Get machine names and pinsPhysical from DB
+var getDbMachineNames = function(req, res, next) {
+	console.log('MOCK: Get machine names from DB');
+	next();
+}
 
 //Tag swipe view
-router.get('/swipetag', (req, res) => {
-  res.render('swipetag', {title: 'Kalmar Makerspace Svep Tag'}); //Renders the interface.pug-file
-});
+var renderSwipeTag = function (req, res, next) {
+	res.render('swipeTag');
+	next();
+}
+
+//Read tag
+var readTag = function (req, res) {
+	console.log('MOCK: Read tag');
+}
+
+//Read pinsPhysical
+var readPinsPhysical = function (req, res, next) {
+	console.log('Reading pinsPhysicalStatus')
+	for (i = 0; i < pinsPhysical.length; ++i) {
+		rpio.open(pinsPhysical[i], rpio.INPUT);
+		pinsPhysicalStatus[i] = rpio.read(pinsPhysical[i]);
+	}
+	pinsPhysicalStatus[2] = 1;
+	pinsTimeLeft[2] = 10;
+	next();
+}
+
+var renderRoot = function (req, res, next) {
+	res.render('root', {machineNames: machineNames, pinStatus: pinsPhysicalStatus, pinsTimeLeft: pinsTimeLeft});
+}
+
+//Swipe tag view
+router.get('/swipeTag', [renderSwipeTag, readTag]);
+
+//Root view, choose machine
+router.get('/', [getDbMachineNames, readPinsPhysical, renderRoot]);
 
 module.exports = router;

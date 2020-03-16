@@ -1,18 +1,18 @@
 extends layout
 
 block content
+  div(id='machineNames' style='display:none')=`${machineNames}`
+  div(id='pinStatus' style='display:none')=`${pinStatus}`
+  div(id='pinTimeLeft' style='display:none')=`${pinsTimeLeft}`
   div(class='container')
     div(class="row")
-      div(class="col-sm-4")
-        button(type="button" class="btn-primary btn-lg btn-block" onclick="location.href='/swipetag?machineid=1';") Svarv
-      div(class="col-sm-4")
-        p
-      div(class="col-sm-4")
-        button(type="button" class="btn-primary btn-lg btn-block" onclick="location.href='/swipetag?machineid=2';") Bandsåg
-    div(class="row row-margin-30")
-      div(class="col-sm-4")
-        button(type="button" class="btn-primary btn-lg btn-block" onclick="location.href='/swipetag?machineid=3';") Bordsåg
-      div(class="col-sm-4")
-        p
-      div(class="col-sm-4")
-        button(type="button" class="btn-primary btn-lg btn-block" onclick="location.href='/swipetag?machineid=4';") CNC-fräs
+      div(id="machinesDiv")
+      - for(var i = 0; i < machineNames.length; i++)
+          div(class="col-sm-3")
+          button(type="button"
+          class="btn btn-primary btn-lg btn-block"
+          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"';")=machineNames[i]
+          p
+
+  script
+    include ../root.js
