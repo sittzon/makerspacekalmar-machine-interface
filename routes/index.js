@@ -12,7 +12,6 @@ rpio.init(rpioptions);
 
 var machineNames = ['Svarv', 'Bandsåg', 'Bordsåg', 'CNC-fräs']
 var pinsPhysical = [15,16,18,19];
-var pinsPhysicalStatus = [0,0,0,0];
 var pinsTimeLeft = [0,0,0,0];
 
 //Decrease timers every second
@@ -33,42 +32,36 @@ var getDbMachineNames = function(req, res, next) {
 //Read tag
 var readTag = function (req, res) {
 	console.log('MOCK: Read tag');
-	var pinNr = req.query.pinNr;
-	//Read tag, if authorized: Set correct pin and timer
+	//Read tag, if authorized -> Set selectionMode to on
 
 	//Set output pin
-	rpio.open(pinsPhysical[pinNr], rpio.OUTPUT);
-	rpio.write(pinsPhysical[pinNr], rpio.HIGH);
-	rpio.sleep(20);
+	// rpio.open(pinsPhysical[pinNr], rpio.OUTPUT);
+	// rpio.write(pinsPhysical[pinNr], rpio.HIGH);
+	// rpio.sleep(20);
 
 	//Set timer
-	pinsTimeLeft[pinNr] = 20;
+	// pinsTimeLeft[pinNr] = 20;
 }
 
-//Read pinsPhysical
-var readPinsPhysical = function (req, res, next) {
-	console.log('Reading pinsPhysicalStatus')
-	for (i = 0; i < pinsPhysical.length; ++i) {
-		rpio.open(pinsPhysical[i], rpio.INPUT);
-		pinsPhysicalStatus[i] = rpio.read(pinsPhysical[i]);
-	}
-	next();
-}
+//Start machine and set timer
+var startMachine = function (req, res, next) {
+	//Set pin to high
+	//TODO
 
-//Tag swipe view
-var renderSwipeTag = function (req, res, next) {
-	res.render('swipeTag');
+	//Set timer to 60s
+	var machineId = req.query.machineId;
+	pinsTimeLeft[machineId] = 60;
 	next();
 }
 
 var renderRoot = function (req, res, next) {
-	res.render('root', {machineNames: machineNames, pinStatus: pinsPhysicalStatus, pinsTimeLeft: pinsTimeLeft});
+	res.render('root', {machineNames: machineNames, pinsTimeLeft: pinsTimeLeft});
 }
 
-//Swipe tag view
-router.get('/swipeTag', [renderSwipeTag, readTag]);
+//Start machine
+router.get('/startMachine', [startMachine, renderRoot]);
 
 //Root view, choose machine
-router.get('/', [getDbMachineNames, readPinsPhysical, renderRoot]);
+router.get('/', [getDbMachineNames, readTag, renderRoot]);
 
 module.exports = router;

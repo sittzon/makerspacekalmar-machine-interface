@@ -2,22 +2,18 @@ extends layout
 
 block content
   div(id='machineNames' style='display:none')=`${machineNames}`
-  div(id='pinStatus' style='display:none')=`${pinStatus}`
-  div(id='pinTimeLeft' style='display:none')=`${pinsTimeLeft}`
+  div(id='pinsTimeLeft' style='display:none')=`${pinsTimeLeft}`
   div(class='container')
     div(class="row")
       div(id="machinesDiv")
       - for(var i = 0; i < machineNames.length; i++)
         div(class="col-sm-3")
-        if pinsTimeLeft[i] <= 0
-          button(type="button"
-          class="btn btn-default btn-lg btn-block"
-          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"&pinNr="+i+"';")=machineNames[i]
-        else
-          button(type="button"
-          class="btn btn-success btn-lg btn-block"
-          onclick="location.href='/swipeTag?machineName="+machineNames[i]+"&pinNr="+i+"';")=(machineNames[i]+': '+pinsTimeLeft[i]+'s kvar')
+        //if pinsTimeLeft[i] <= 0
+        button(id='machineButton'+i type="button"
+        class="btn btn-default btn-lg btn-block" onclick="location.href='/startMachine?machineId="+i+"'" disabled)=machineNames[i]
         p
+
+  button(id="hiddenButton" class="align-self-end btn btn-default btn-lg" onclick='selectionModeOn()') Authorize
 
   script
     include ../root.js
