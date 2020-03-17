@@ -1,4 +1,4 @@
-var selectionMode = false;
+var selectionMode = false;//document.getElementById("selectionMode");
 
 function getElementsStartsWithId( id ) {
   var children = document.body.getElementsByTagName('*');
@@ -67,9 +67,21 @@ function updateButtonClasses() {
 }
 
 function updateButtonText() {
-
+	var pinsTimeLeft = document.getElementById("pinsTimeLeft");
+	var machineButtons = getElementsStartsWithId('machineButton');
+	var machineNames = document.getElementById("machineNames");
+	var timeLeft = pinsTimeLeft.innerHTML.split(',');
+	var mNames = machineNames.innerHTML.split(',');
+	for (i = 0; i < timeLeft.length; i++) {
+		var timeLeftInt = parseInt(timeLeft[i]);
+		if (timeLeftInt > 0) {
+			machineButtons[i].innerHTML = mNames[i] + ' ' + timeLeft[i] + 's kvar'
+		}
+		else {
+			machineButtons[i].innerHTML = mNames[i]
+		}
+	}
 }
-
 
 function updateTimerAndButtons() {
 	decreasePinsTimeLeft();
@@ -81,5 +93,4 @@ setInterval(function() {
 	updateTimerAndButtons();
 }, 1000);
 
-
-updateButtonClasses();
+updateTimerAndButtons();
