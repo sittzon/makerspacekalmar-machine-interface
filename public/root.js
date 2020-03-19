@@ -1,23 +1,4 @@
-var authorized = false;//document.getElementById("selectionMode");
-
-
-//Eventlistener
-// const es = new EventSource('/sse');
-
-// const listener = function (event) {
-// 	const type = event.type;
-
-// 	window.console.log(`${type}: ${event.lastEventId}=${event.data || es.url}`);
-
-// 	if (type === 'result') {
-// 	  es.close();
-// 	}
-// };
-
-// es.addEventListener('open', listener);
-// es.addEventListener('message', listener);
-// es.addEventListener('error', listener);
-// es.addEventListener('result', listener);
+var authorized = false;
 
 var socket = io();
 

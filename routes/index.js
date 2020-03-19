@@ -1,8 +1,6 @@
 const app = require('express');
 const router = app.Router();
 const rpio = require('rpio');
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
 
 var rpioptions = {
         gpiomem: false,          /* Use /dev/mem */
@@ -72,8 +70,5 @@ router.get('/startMachine', [startMachine, renderRoot]);
 //Root view, choose machine
 router.get('/', [renderRoot]);
 
-io.on('connection', function(socket){
-  console.log('a user connected');
-});
 
 module.exports = router;
