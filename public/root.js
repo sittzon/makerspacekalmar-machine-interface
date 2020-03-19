@@ -1,7 +1,5 @@
 var authorized = false;
 
-var socket = io();
-
 function getElementsStartsWithId( id ) {
   var children = document.body.getElementsByTagName('*');
   var elements = [], child;
@@ -22,6 +20,16 @@ function authorize() {
 	}
 	authorized = true;
 }
+
+function deAuthorize() {
+	var machineButtons = getElementsStartsWithId('machineButton');
+	for (i = 0; i < machineButtons.length; i++) {
+		machineButtons[i].classList.remove('btn-primary');
+		machineButtons[i].disabled = true;
+		machineButtons[i].classList.add('btn-default');
+	}
+	authorized = false;
+};
 
 function decreasePinsTimeLeft() {
 	var pinsTimeLeft = document.getElementById("pinsTimeLeft");
@@ -91,8 +99,23 @@ function updateTimerAndButtons() {
 	updateButtonText();
 }
 
+//Update timers and classes every second
 setInterval(function() {
 	updateTimerAndButtons();
 }, 1000);
+
+//Client function to handle authorization from server
+$(function () {
+	var socket = io();
+	socket.on('authorized', function(msg){
+	  console.log('Authorized: '+msg);
+	  if(msg) {
+	  	authorize();
+	  }
+	  else {
+	  	deAuthorize();
+	  }
+	});
+});
 
 updateTimerAndButtons();
