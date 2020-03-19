@@ -18,7 +18,7 @@ var authorized = false;//document.getElementById("selectionMode");
 // es.addEventListener('message', listener);
 // es.addEventListener('error', listener);
 // es.addEventListener('result', listener);
-§
+
 var socket = io();
 
 function getElementsStartsWithId( id ) {

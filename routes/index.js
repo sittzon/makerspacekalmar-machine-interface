@@ -1,6 +1,8 @@
-const express = require('express');
-const router = express.Router();
+const app = require('express');
+const router = app.Router();
 const rpio = require('rpio');
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 var rpioptions = {
         gpiomem: false,          /* Use /dev/mem */
@@ -14,7 +16,7 @@ var machineNames = ['Svarv', 'Bandsåg', 'Bordsåg', 'CNC-fräs']
 var pinsPhysical = [15,16,18,19];
 var pinsTimeLeft = [0,0,0,0];
 
-var selectionMode = false;
+var authorized = false;
 
 //Decrease timers every second
 setInterval(function(){
@@ -24,6 +26,12 @@ setInterval(function(){
 		}
 	}
 },1000);
+
+//Read tag and authorize
+var readTag = function (req, res, next) {
+	console.log('MOCK: Read tag');
+	//Read tag. If authorized -> Set authorized to on and send to client
+}
 
 var getDbUserTagIds = function(req, res, next) {
 	console.log('MOCK: Get user tag IDs from DB');
@@ -36,16 +44,14 @@ var getDbMachineNames = function(req, res, next) {
 	next();
 }
 
-//Read tag and authorize
-var readTag = function (req, res, next) {
-	console.log('MOCK: Read tag');
-	//Read tag. If authorized -> Set selectionMode to on and render root again
-	next();
-}
-
 //Start machine and set timer
 var startMachine = function (req, res, next) {
 	var machineId = req.query.machineId;
+
+	//Get tagId for logging and verify correct user
+	// var tagId = req.query.tagId;
+	// console.log(tagId);
+
 	//Set pin to high
 	//TODO
 	// rpio.open(pinsPhysical[pinNr], rpio.OUTPUT);
@@ -57,13 +63,17 @@ var startMachine = function (req, res, next) {
 }
 
 var renderRoot = function (req, res, next) {
-	res.render('root', {machineNames: machineNames, pinsTimeLeft: pinsTimeLeft, selectionMode: selectionMode});
+	res.render('body', {machineNames: machineNames, pinsTimeLeft: pinsTimeLeft, authorized: authorized});
 }
 
 //Start machine
 router.get('/startMachine', [startMachine, renderRoot]);
 
 //Root view, choose machine
-router.get('/', [getDbMachineNames, getDbUserTagIds, readTag, renderRoot]);
+router.get('/', [renderRoot]);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
 
 module.exports = router;

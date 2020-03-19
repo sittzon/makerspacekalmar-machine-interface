@@ -1,4 +1,4 @@
-extends layout
+extends header
 
 block content
   div(id='machineNames' style='display:none')=`${machineNames}`
@@ -9,12 +9,10 @@ block content
       div(id="machinesDiv")
       - for(var i = 0; i < machineNames.length; i++)
         div(class="col-sm-3")
-        //if pinsTimeLeft[i] <= 0
         button(id='machineButton'+i type="button"
         class="btn btn-default btn-lg btn-block" onclick="location.href='/startMachine?machineId="+i+"'" disabled)=machineNames[i]
         p
 
-  button(id="hiddenButton" class="align-self-end btn btn-default btn-lg" onclick='selectionModeOn()') Authorize
-
-  script
-    include ../root.js
+  button(id="hiddenButton" class="align-self-end btn btn-default btn-lg" onclick='authorize()') Authorize
+  
+  script(src="/root.js")
