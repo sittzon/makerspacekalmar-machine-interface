@@ -1,3 +1,4 @@
+const mysql = require('./mysql');
 const rpio = require('rpio');
 var rpioptions = {
         gpiomem: false,          /* Use /dev/mem */

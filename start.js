@@ -5,6 +5,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const gpio = require('./gpio');
+const mysql = require('./mysql');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

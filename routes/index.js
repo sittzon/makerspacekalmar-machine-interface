@@ -1,6 +1,7 @@
 const app = require('express');
 const router = app.Router();
 const gpio = require('../gpio');
+const mysql = require('../mysql');
 
 var machineNames = ['Svarv', 'Bandsåg', 'Bordsåg', 'CNC-fräs']
 
