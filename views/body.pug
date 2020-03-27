@@ -9,7 +9,7 @@ block content
       - for(var i = 0; i < machineNames.length; i++)
         div(class="col-sm-3")
         button(id='machineButton'+i type="button"
-        class="btn btn-default btn-lg btn-block" onclick="location.href='/startMachine?machineId="+i+"'" disabled)=machineNames[i]
+        class="btn btn-default btn-lg btn-block" onclick="startMachine("+i+")" disabled)=machineNames[i]
         p
 
   button(id="hiddenButton" class="align-self-end btn btn-default btn-lg" onclick='authorize()') Authorize

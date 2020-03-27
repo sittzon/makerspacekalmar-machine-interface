@@ -104,7 +104,17 @@ setInterval(function() {
 	updateTimerAndButtons();
 }, 1000);
 
-//Client function to handle authorization from server
+//socket.io function to send start machine event to server
+function startMachine(machineNr) {
+	var socket = io();
+	socket.emit('startMachine', machineNr);
+	//Reload page after timeout
+	setTimeout(function() {
+		location.reload(true);
+	}, 100);
+}
+
+//socket.io function to handle authorization from server
 $(function () {
 	var socket = io();
 	socket.on('authorized', function(msg){

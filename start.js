@@ -5,7 +5,6 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const gpio = require('./gpio');
-const mysql = require('./mysql');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -28,5 +27,12 @@ setInterval(function(){
 	}
 }, 100);
 
+//Trigger on message 'startMachine'
+io.on('connection', function(socket) {
+	socket.on('startMachine', function(msg) {
+		console.log('Starting machine ' + msg);
+		gpio.startMachine(msg);
+	});
+});
 
 module.exports = http;
