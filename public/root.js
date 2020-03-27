@@ -1,14 +1,15 @@
 var authorized = false;
 
 function getElementsStartsWithId( id ) {
-  var children = document.body.getElementsByTagName('*');
-  var elements = [], child;
-  for (var i = 0, length = children.length; i < length; i++) {
-    child = children[i];
-    if (child.id.substr(0, id.length) == id)
-      elements.push(child);
-  }
-  return elements;
+	var children = document.body.getElementsByTagName('*');
+	var elements = [], child;
+	for (var i = 0, length = children.length; i < length; i++) {
+		child = children[i];
+		if (child.id.substr(0, id.length) == id) {
+			elements.push(child);
+		}
+	}
+	return elements;
 }
 
 function authorize() {
@@ -19,6 +20,11 @@ function authorize() {
 		machineButtons[i].classList.add('btn-primary');
 	}
 	authorized = true;
+	
+	//Automatically deAuth after 10s
+	setTimeout(function() {
+		deAuthorize();
+	}, 10000);
 }
 
 function deAuthorize() {
@@ -47,7 +53,6 @@ function decreasePinsTimeLeft() {
 		}
 	}
 	timeLeftResult = timeLeftResult.substr(0, timeLeftResult.length);
-	// console.log('Time Left: ' + timeLeftResult);
 	pinsTimeLeft.innerHTML = timeLeftResult;
 };
 
@@ -99,33 +104,36 @@ function updateTimerAndButtons() {
 	updateButtonText();
 }
 
-//Update timers and classes every second
-setInterval(function() {
-	updateTimerAndButtons();
-}, 1000);
-
 //socket.io function to send start machine event to server
 function startMachine(machineNr) {
 	var socket = io();
 	socket.emit('startMachine', machineNr);
-	//Reload page after timeout
-	setTimeout(function() {
-		location.reload(true);
-	}, 100);
 }
 
-//socket.io function to handle authorization from server
+//socket.io function to handle authorization and machine started events from server
 $(function () {
 	var socket = io();
-	socket.on('authorized', function(msg){
-	  console.log('Authorized: '+msg);
-	  if(msg) {
-	  	authorize();
-	  }
-	  else {
-	  	deAuthorize();
-	  }
+	socket.on('authorized', function(msg) {
+		console.log('Authorized: '+msg);
+		if(msg) {
+			authorize();
+		}
+		else {
+			deAuthorize();
+		}
+		//Automatically deAuth after 10s
+		setTimeout(function() {
+			deAuthorize();
+		}, 10000);
+	});
+	socket.on('machineStarted', function(msg) {
+		location.reload(true);
 	});
 });
+
+//Update timers and classes every second
+setInterval(function() {
+	updateTimerAndButtons();
+}, 1000);
 
 updateTimerAndButtons();

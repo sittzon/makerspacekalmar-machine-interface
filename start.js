@@ -20,10 +20,10 @@ var prevValue = false;
 setInterval(function(){
 	gpio.readTag();
 	//Send value to client only if value changed
-	if (prevValue != gpio.authorized()) {
-		console.log('Sending auth to client: '+gpio.authorized());
-		prevValue = gpio.authorized();
-		io.emit('authorized', gpio.authorized());
+	if (prevValue != gpio.authorized) {
+		console.log('Sending auth to client: '+gpio.authorized);
+		prevValue = gpio.authorized;
+		io.emit('authorized', gpio.authorized);
 	}
 }, 100);
 
@@ -32,6 +32,7 @@ io.on('connection', function(socket) {
 	socket.on('startMachine', function(msg) {
 		console.log('Starting machine ' + msg);
 		gpio.startMachine(msg);
+		io.emit('machineStarted');
 	});
 });
 

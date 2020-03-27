@@ -17,13 +17,13 @@ var pinsPhysical = [15,16,18,19];
 var pinsTimeLeft = [0,0,0,0];
 
 //Decrease timers every second
-setInterval(function(){
+setInterval(function() {
 	for (i = 0; i < pinsTimeLeft.length; ++i) {
 		if (pinsTimeLeft[i] > 0) {
 			pinsTimeLeft[i]--;
 		}
 	}
-},1000);
+}, 1000);
 
 //Get tag ids from DB that are authorized
 var updateDbUserTagIds = function() {
@@ -65,9 +65,9 @@ var readTag = function () {
 }
 
 //Returns if read tag id is authorized
-var authorizedFunc = function() {
-	return authorized;
-}
+// var authorizedFunc = function() {
+// 	return authorized;
+// }
 
 var startMachine = function(machineId) {
 	//Get tagId for logging and verify correct user
@@ -92,6 +92,6 @@ setInterval(function(){
 updateDbUserTagIds();
 
 exports.readTag = readTag;
-exports.authorized = authorizedFunc;
+exports.authorized = authorized;
 exports.startMachine = startMachine;
 exports.pinsTimeLeft = pinsTimeLeft;

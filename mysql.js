@@ -1,5 +1,7 @@
 var mysql = require('mysql');
 
+var machineNames = ['Svarv', 'Bandsåg', 'Bordsåg', 'CNC-fräs']
+
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -27,3 +29,4 @@ var createDbCallback = function (err, result) {
 
 exports.getTagIdSql = getTagIdSql;
 exports.getTagIdCallback = getTagIdCallback;
+exports.machineNames = machineNames;
