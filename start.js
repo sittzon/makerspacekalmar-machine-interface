@@ -5,6 +5,7 @@ const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const gpio = require('./gpio');
+const open = require('open');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -35,5 +36,17 @@ io.on('connection', function(socket) {
 		io.emit('machineStarted');
 	});
 });
+
+// Open in Chrome if 'chromekiosk' is specified
+if (process.argv[2] == "chromekiosk") {
+	var chrome = ""
+	if (`${process.platform}` == 'darwin') {
+		chrome = 'google chrome'
+	} else {
+		chrome = 'chromium-browser'
+	}
+
+	open('http://localhost:3000', {app: [chrome, '--kiosk']});
+}
 
 module.exports = http;

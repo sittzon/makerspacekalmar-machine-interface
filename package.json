@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon ./start.js"
+    "start": "node ./start.js chromekiosk",
+    "dev": "nodemon ./start.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "mysql": "^2.18.1",
+    "open": "^7.0.3",
     "pug": "^2.0.4",
     "rpio": "^2.1.1",
     "socket.io": "^2.3.0"
