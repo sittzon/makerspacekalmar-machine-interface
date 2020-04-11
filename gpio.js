@@ -1,5 +1,7 @@
 const mysql = require('./mysql');
 const rpio = require('rpio');
+const Mfrc522 = require("mfrc522-rpi");
+const SoftSPI = require("rpi-softspi");
 var rpioptions = {
         gpiomem: false,          /* Use /dev/mem */
         mapping: 'physical',    /* Use the P1-P40 numbering scheme */
@@ -7,6 +9,16 @@ var rpioptions = {
 }
 
 rpio.init(rpioptions);
+
+const softSPI = new SoftSPI({
+  clock: 23, // pin number of SCLK
+  mosi: 19, // pin number of MOSI
+  miso: 21, // pin number of MISO
+  client: 24 // pin number of CS
+});
+
+const mfrc522 = new Mfrc522(softSPI).setResetPin(22).setBuzzerPin(18);
+
 
 var authorized = false;
 
@@ -33,11 +45,11 @@ var updateDbUserTagIds = function() {
 //Read tag and set authorized variable for 10s if tag is authorized
 var readTag = function () {
 	// console.log('MOCK: Read tag');
-	rpio.spiBegin();
-	rpio.spiChipSelect(0);                  /* Use CE0 */
-	rpio.spiSetCSPolarity(0, rpio.HIGH);    /* AT93C46 chip select is active-high */
-	rpio.spiSetClockDivider(128);           /* AT93C46 max is 2MHz, 128 == 1.95MHz */
-	rpio.spiSetDataMode(0);
+	//rpio.spiBegin();
+//	rpio.spiChipSelect(0);                  /* Use CE0 */
+//	rpio.spiSetCSPolarity(0, rpio.HIGH);    /* AT93C46 chip select is active-high */
+//	rpio.spiSetClockDivider(128);           /* AT93C46 max is 2MHz, 128 == 1.95MHz */
+//	rpio.spiSetDataMode(0);
 	/*
 	 * There are various magic numbers below.  A quick overview:
 	 *
@@ -49,7 +61,7 @@ var readTag = function () {
 	 * Once we have the data returned in rx, we have to do some bit shifting to
 	 * get the result in the format we want, as the data is not 8-bit aligned.
  	*/
-
+/*
 	var tx = new Buffer([0x3, 0x0, 0x00, 0x00]);
 	var rx = new Buffer(4);
 	var out;
@@ -62,6 +74,38 @@ var readTag = function () {
         // console.log(out.toString(16) + ((j % 16 == 0) ? '\n' : ' '));
 	}
 	rpio.spiEnd();
+*/
+
+//# reset card
+  mfrc522.reset();
+
+  //# Scan for cards
+  let response = mfrc522.findCard();
+  if (!response.status) {
+    console.log("No Card");
+    return;
+  }
+  //console.log("Card detected, CardType: " + response.bitSize);
+
+  //# Get the UID of the card
+  response = mfrc522.getUid();
+  if (!response.status) {
+    console.log("UID Scan Error");
+    return;
+  }
+
+//# If we have the UID, continue
+  const uid = response.data;
+  console.log(
+    "Card read UID: %s %s %s %s",
+    uid[0].toString(16),
+    uid[1].toString(16),
+    uid[2].toString(16),
+    uid[3].toString(16)
+  );
+
+  //# Stop
+  mfrc522.stopCrypto();
 }
 
 //Returns if read tag id is authorized

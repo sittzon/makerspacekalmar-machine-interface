@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "mfrc522-rpi": "^2.1.2",
     "mysql": "^2.18.1",
     "open": "^7.0.3",
     "pug": "^2.0.4",
