@@ -20,11 +20,6 @@ function authorize() {
 		machineButtons[i].classList.add('btn-primary');
 	}
 	authorized = true;
-	
-	//Automatically deAuth after 10s
-	setTimeout(function() {
-		deAuthorize();
-	}, 10000);
 }
 
 function deAuthorize() {
@@ -121,10 +116,6 @@ $(function () {
 		else {
 			deAuthorize();
 		}
-		//Automatically deAuth after 10s
-		setTimeout(function() {
-			deAuthorize();
-		}, 10000);
 	});
 	socket.on('machineStarted', function(msg) {
 		location.reload(true);
